@@ -1,0 +1,11 @@
+#Ambiente virtual e arquivos de cache 
+venv/
+__pycache__/
+*.pyc
+
+#Dados brutos e processados
+data/raw_parquet/*.parquet
+data/raw_parquet/*.dbc
+
+# Variáveis de ambiente
+.env
