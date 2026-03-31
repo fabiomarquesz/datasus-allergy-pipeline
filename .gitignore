@@ -9,3 +9,6 @@ data/raw_parquet/*.dbc
 
 # Variáveis de ambiente
 .env
+
+#Arquivos de checkpoints do Jupyter Notebook
+.ipynb_checkpoints/
