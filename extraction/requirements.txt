@@ -2,3 +2,5 @@ pysus
 pandas
 pyarrow
 jupyterlab
+sqlalchemy
+psycopg2-binary
