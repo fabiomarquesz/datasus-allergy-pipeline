@@ -1,0 +1,20 @@
+services:
+  postgres:
+    image: postgres:15
+    container_name: datasus_postgres
+    restart: always
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin
+      POSTGRES_DB: health_data
+    ports:
+      - "5433:5432"
+    volumes:
+      # Mapeia a nossa pasta local para dentro do contêiner.
+      # O Postgres roda automaticamente qualquer .sql que estiver aqui ao ser criado!
+      - ./db/init:/docker-entrypoint-initdb.d
+      # Volume persistente para não perdermos os dados se o contêiner reiniciar
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:
