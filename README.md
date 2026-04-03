@@ -55,3 +55,4 @@ Quais são os 10 municípios com maior volume de internações por asma?
 Qual é o custo financeiro total de anafilaxia para a rede pública em um dado período?
 
 Qual a taxa de mortalidade associada a crises alérgicas respiratórias severas?
+```
