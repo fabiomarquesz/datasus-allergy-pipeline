@@ -30,8 +30,9 @@ O projeto foi construído utilizando as melhores práticas da indústria, implem
 **1. Subir a Infraestrutura:**
 ```bash
 docker compose up -d
-(O banco de dados PostgreSQL será iniciado na porta 5433 e as tabelas e schemas serão criados automaticamente).
 ```
+(O banco de dados PostgreSQL será iniciado na porta 5433 e as tabelas e schemas serão criados automaticamente).
+
 
 **2. Iniciar o Orquestrador (Airflow):**
 
@@ -41,7 +42,7 @@ export AIRFLOW_HOME=$(pwd)/airflow
 airflow standalone
 ```
 
-**3. Executar o Pipeline:**
+## 3. Executar o Pipeline:
 
 Acesse http://localhost:8080 (O login e senha são gerados no terminal pelo Airflow).
 
@@ -49,7 +50,7 @@ Localize a DAG datasus_allergy_pipeline e acione o Trigger DAG.
 
 Todo o processo de ETL ocorrerá de forma automatizada e monitorada.
 
-**📊 Análises Geradas**
+## 📊 Análises Geradas
 Os dados processados na Camada Ouro e os notebooks de análise permitem responder perguntas como:
 
 Quais são os 10 municípios com maior volume de internações por asma?
