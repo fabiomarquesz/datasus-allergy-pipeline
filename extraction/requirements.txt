@@ -4,3 +4,6 @@ pyarrow
 jupyterlab
 sqlalchemy
 psycopg2-binary
+apache-airflow
+matplotlib
+seaborn
