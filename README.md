@@ -42,13 +42,13 @@ export AIRFLOW_HOME=$(pwd)/airflow
 airflow standalone
 ```
 
-## 3. Executar o Pipeline:
+**3. Executar o Pipeline:**
 
-Acesse http://localhost:8080 (O login e senha são gerados no terminal pelo Airflow).
+* Acesse http://localhost:8080 (O login e senha são gerados no terminal pelo Airflow).
 
-Localize a DAG datasus_allergy_pipeline e acione o Trigger DAG.
+* Localize a DAG datasus_allergy_pipeline e acione o Trigger DAG.
 
-Todo o processo de ETL ocorrerá de forma automatizada e monitorada.
+* Todo o processo de ETL ocorrerá de forma automatizada e monitorada.
 
 ## 📊 Análises Geradas
 Os dados processados na Camada Ouro e os notebooks de análise permitem responder perguntas como:
