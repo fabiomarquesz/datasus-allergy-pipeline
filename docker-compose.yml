@@ -10,11 +10,103 @@ services:
     ports:
       - "${POSTGRES_PORT}:5432"
     volumes:
-      # Mapeia a nossa pasta local para dentro do contêiner.
-      # O Postgres roda automaticamente qualquer .sql que estiver aqui ao ser criado!
       - ./db/init:/docker-entrypoint-initdb.d
-      # Volume persistente para não perdermos os dados se o contêiner reiniciar
       - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "${POSTGRES_USER}", "-d", "${POSTGRES_DB}"]
+      interval: 10s
+      retries: 5
+      start_period: 10s
+
+  airflow-init:
+    build: .
+    container_name: datasus_airflow_init
+    restart: "no"
+    entrypoint: /bin/bash
+    command:
+      - -c
+      - |
+        airflow db init &&
+        airflow users create \
+          --username ${AIRFLOW_USER} \
+          --password ${AIRFLOW_PASSWORD} \
+          --firstname Admin \
+          --lastname Datasus \
+          --role Admin \
+          --email admin@datasus.local || true
+    environment:
+      POSTGRES_HOST: postgres
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+      AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres/${POSTGRES_DB}
+      AIRFLOW__CORE__EXECUTOR: LocalExecutor
+      AIRFLOW__CORE__LOAD_EXAMPLES: 'false'
+    volumes:
+      - ./airflow/dags:/opt/airflow/dags
+      - ./extraction:/opt/airflow/extraction
+      - ./data:/opt/airflow/data
+      - ./db:/opt/airflow/db   
+      - airflow_logs:/opt/airflow/logs
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  airflow-webserver:
+    image: datasus-allergy-pipeline-airflow-webserver
+    build: .
+    container_name: datasus_airflow_webserver
+    restart: always
+    command: bash -c "airflow db init && airflow webserver"
+    ports:
+      - "8080:8080"
+    environment:
+      POSTGRES_HOST: postgres
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+      AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres/${POSTGRES_DB}
+      AIRFLOW__CORE__EXECUTOR: LocalExecutor
+      AIRFLOW__CORE__LOAD_EXAMPLES: 'false'
+    volumes:
+      - ./airflow/dags:/opt/airflow/dags
+      - ./extraction:/opt/airflow/extraction
+      - ./data:/opt/airflow/data
+      - ./db:/opt/airflow/db   
+      - airflow_logs:/opt/airflow/logs
+    depends_on:
+      postgres:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "--fail", "http://localhost:8080/health"]
+      interval: 30s
+      retries: 5
+      start_period: 30s
+
+  airflow-scheduler:
+    image: datasus-allergy-pipeline-airflow-scheduler
+    build: .
+    container_name: datasus_airflow_scheduler
+    restart: always
+    command: bash -c "airflow db init && airflow scheduler"
+    environment:
+      POSTGRES_HOST: postgres
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+      AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres/${POSTGRES_DB}
+      AIRFLOW__CORE__EXECUTOR: LocalExecutor
+      AIRFLOW__CORE__LOAD_EXAMPLES: 'false'
+    volumes:
+      - ./airflow/dags:/opt/airflow/dags
+      - ./extraction:/opt/airflow/extraction
+      - ./data:/opt/airflow/data
+      - ./db:/opt/airflow/db 
+      - airflow_logs:/opt/airflow/logs
+    depends_on:
+      postgres:
+        condition: service_healthy
 
 volumes:
   postgres_data:
+  airflow_logs:

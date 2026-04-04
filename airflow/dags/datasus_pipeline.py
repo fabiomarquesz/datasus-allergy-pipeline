@@ -1,11 +1,16 @@
 from airflow import DAG
-from airflow.providers.standard.operators.bash import BashOperator
+from airflow.operators.bash import BashOperator
 from datetime import datetime, timedelta
 import os
 
-# Caminho absoluto para o diretório do projeto
-PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), '../../'))
-VENV_PYTHON = f"{PROJECT_ROOT}/venv/bin/python"
+# Caminhos dentro do container
+PROJECT_ROOT = "/opt/airflow"
+
+# Credenciais via variáveis de ambiente
+PG_USER = os.environ.get("POSTGRES_USER", "admin")
+PG_DB   = os.environ.get("POSTGRES_DB", "health_data")
+
+
 
 # Configurações da DAG
 default_args = {
@@ -17,7 +22,6 @@ default_args = {
     'retry_delay': timedelta(minutes=1),
 }
 
-# Definindo a DAG e seu agendamento
 with DAG(
     'datasus_allergy_pipeline',
     default_args=default_args,
@@ -27,34 +31,24 @@ with DAG(
     catchup=False,
     tags=['datasus', 'bronze', 'prata', 'ouro'],
 ) as dag:
-    
-    # Definindo as tarefas da DAG
-    # Usando o BashOperator para simular comandos linux
 
-    #Tarefa 1: Roda o script de extração via PySUS
+    # Tarefa 1: Extração via PySUS
     extract_task = BashOperator(
         task_id='extract_sih_data',
-        bash_command=f'cd {PROJECT_ROOT} && {VENV_PYTHON} extraction/extract_sih.py',
+        bash_command=f'cd {PROJECT_ROOT} && python extraction/extract_sih.py',
     )
 
-    # Tareta 2: Roda o script de ingestão para a camada bronze
+    # Tarefa 2: Ingestão na camada Bronze
     load_bronze_task = BashOperator(
         task_id='load_to_bronze',
-        bash_command=f'cd {PROJECT_ROOT} && {VENV_PYTHON} extraction/load_to_bronze.py',
+        bash_command=f'cd {PROJECT_ROOT} && python extraction/load_to_bronze.py',
     )
 
-    # Tarefa 3: Roda o script SQL da camada Prata dentro do Docker
+    # Tarefa 3: Transformação para camada Prata via SQL
     transform_silver_task = BashOperator(
-        task_id='transform_to_silver',
-        bash_command=f'docker exec datasus_postgres psql -U admin -d health_data -f /docker-entrypoint-initdb.d/01_dwh_transform.sql',
-    )
+    task_id='transform_to_silver',
+    bash_command=f'cd {PROJECT_ROOT} && python extraction/transform_silver.py',
+    ),
 
-    # Tarefa 4: Roda o script SQL da camada Ouro dentro do Docker
-    transform_gold_task = BashOperator(
-        task_id='transform_to_gold',
-        bash_command=f"docker exec datasus_postgres psql -U admin -d health_data -f /docker-entrypoint-initdb.d/02_analytics.sql ",
-    )
-
-    # ORQUESTRAÇÃO (A Ordem de Execução)
-    # Os sinais ">>" indicam a dependência. Uma tarefa só roda se a anterior brilhar verde!
-    extract_task >> load_bronze_task >> transform_silver_task >> transform_gold_task
+    # Dependências
+    extract_task >> load_bronze_task >> transform_silver_task
