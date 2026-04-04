@@ -1,14 +1,26 @@
 #Ambiente virtual e arquivos de cache 
 venv/
+.venv/
 __pycache__/
 *.pyc
+*.pyo
 
 #Dados brutos e processados
-data/raw_parquet/*.parquet
-data/raw_parquet/*.dbc
+*.parquet
+*.dbc
+*.csv
+data/
 
 # Variáveis de ambiente
 .env
 
 #Arquivos de checkpoints do Jupyter Notebook
 .ipynb_checkpoints/
+
+#Logs do Airflow
+airflow/logs/
+
+# Outros arquivos de configuração e metadados do Airflow
+airflow/airflow.cfg
+airflow/airflow.db
+simple_auth_manager_passwords.json.generated
