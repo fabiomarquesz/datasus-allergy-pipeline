@@ -25,6 +25,13 @@ O projeto foi construído utilizando as melhores práticas da indústria, implem
 * **Orquestração:** Apache Airflow (Pipeline automatizado e agendado).
 * **Controle de Versão:** Git & GitHub.
 
+## 🐍 Configuração do Ambiente Python
+```bash
+python -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
+```
+
 ## ⚙️ Como Executar o Projeto
 
 **1. Subir a Infraestrutura:**
