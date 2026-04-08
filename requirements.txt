@@ -1,9 +1,15 @@
-pysus==1.0.1
-pandas==2.3.3
-pyarrow==23.0.1
-jupyterlab==4.5.6
-sqlalchemy==2.0.48
-psycopg2-binary==2.9.11
-apache-airflow==2.9.1
-matplotlib==3.10.8
-seaborn==0.13.2
+# ==============================================================
+# DATASUS Allergy Pipeline — Dependências Python
+# ==============================================================
+# Instale em venv local (para notebooks e desenvolvimento):
+#   python -m venv .venv && source .venv/bin/activate
+#   pip install -r requirements.txt
+#
+# O Airflow usa esta mesma lista via _PIP_ADDITIONAL_REQUIREMENTS
+# no docker-compose.yml, então mantenha tudo aqui.
+# ==============================================================
+
+pysus>=1.0.0
+pandas==2.2.2
+psycopg2-binary==2.9.9
+python-dotenv==1.0.1

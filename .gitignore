@@ -1,26 +1,41 @@
-#Ambiente virtual e arquivos de cache 
-venv/
-.venv/
-__pycache__/
-*.pyc
-*.pyo
 
-#Dados brutos e processados
+# --- Segredos / Ambiente ---
+.env
+*.pem
+*.key
+
+# --- Python ---
+__pycache__/
+*.py[cod]
+*.pyo
+*.egg-info/
+dist/
+build/
+.venv/
+venv/
+env/
+
+# --- Jupyter ---
+.ipynb_checkpoints/
+*.ipynb_meta
+
+# --- Airflow (logs e DBs locais) ---
+airflow/logs/
+airflow/airflow.db
+airflow/airflow.cfg
+airflow/webserver_config.py
+airflow/standalone_admin_password.txt
+
+# --- Docker volumes locais ---
+postgres_data/
+
+# --- Dados brutos (arquivos grandes) ---
+data/raw/
 *.parquet
 *.dbc
 *.csv
-data/
 
-# Variáveis de ambiente
-.env
-
-#Arquivos de checkpoints do Jupyter Notebook
-.ipynb_checkpoints/
-
-#Logs do Airflow
-airflow/logs/
-
-# Outros arquivos de configuração e metadados do Airflow
-airflow/airflow.cfg
-airflow/airflow.db
-simple_auth_manager_passwords.json.generated
+# --- IDEs ---
+.vscode/
+.idea/
+*.swp
