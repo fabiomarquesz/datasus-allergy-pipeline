@@ -138,7 +138,6 @@ datasus-allergy-pipeline/
 
 - [Docker](https://docs.docker.com/get-docker/) e Docker Compose instalados
 - Git
-- 4 GB de RAM livres para os containers
 
 ### 1. Clone o repositório
 
