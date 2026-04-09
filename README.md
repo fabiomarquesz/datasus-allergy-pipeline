@@ -129,7 +129,19 @@ datasus-allergy-pipeline/
 ├── requirements.txt                      # Dependências Python únicas
 └── README.md
 ```
+---
 
+## 📈 Resultados da Análise (Camada Gold)
+
+Aqui estão alguns dos insights gerados diretamente do nosso Jupyter Notebook consumindo a base analítica:
+
+**Perfil Demográfico (Faixa Etária x Sexo)**
+![Perfil Demográfico](analysis/notebooks/perfil_demografico.png)
+
+**Internações e custo total por mês**
+![KPI Diagnóstico](analysis/notebooks/kpi_diagnostico_atualizado.png)
+
+**
 ---
 
 ## ⚙️ Como Executar
@@ -215,6 +227,17 @@ jupyter notebook analysis/notebooks/01_eda_gold.ipynb
 | `analytics.kpi_diagnostico` | Mesmas métricas agrupadas por CID/grupo de diagnóstico |
 | `analytics.kpi_serie_temporal` | Série mensal de internações, óbitos e custo (Jan–Dez 2025) |
 | `analytics.kpi_demografico` | Perfil por faixa etária e sexo |
+
+---
+
+## 🧠 Desafios e Soluções (Troubleshooting)
+
+Durante a construção deste pipeline, enfrentei desafios arquiteturais complexos, incluindo:
+* Resolução de dependências conflitantes no ecossistema Python (Pandas 2.2 vs SQLAlchemy 2.0 vs Airflow).
+* Tratamento de anomalias e "bugs silenciosos" nos dados brutos do DATASUS (nomenclaturas divergentes e códigos legados numéricos para gênero).
+* Customização de imagens Docker para compilação de bibliotecas em C (PySUS).
+
+Documentei todas as análises de causa raiz e soluções adotadas no arquivo [TROUBLESHOOTING.md](TROUBLESHOOTING.md).
 
 ---
 
