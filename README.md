@@ -141,7 +141,7 @@ Aqui estão alguns dos insights gerados diretamente do nosso Jupyter Notebook co
 **Internações e custo total por mês**
 ![KPI Diagnóstico](analysis/notebooks/kpi_diagnostico_atualizado.png)
 
-**
+
 ---
 
 ## ⚙️ Como Executar
